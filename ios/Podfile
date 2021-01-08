@@ -1,0 +1,39 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, '10.0'
+
+target 'mediaclient' do
+  config = use_native_modules!
+
+  use_react_native!(:path => config["reactNativePath"])
+
+  target 'mediaclientTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable these next few lines.
+  use_flipper!
+  post_install do |installer|
+    flipper_post_install(installer)
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+          config.build_settings['IPHONEOS_DEPLOYMENT_TAR吃的GET'] = '8.0'
+      end
+  end
+
+  end
+end
+
+target 'mediaclient-tvOS' do
+  # Pods for mediaclient-tvOS
+
+  target 'mediaclient-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+end
