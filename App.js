@@ -1,70 +1,73 @@
-import React, {useRef} from 'react';
+import React, {useCallback} from 'react';
 import {
   SafeAreaView,
   StatusBar,
   Button,
-  StyleSheet,
-  Dimensions,
-  View,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
-import {NodeCameraView} from 'react-native-nodemediaclient';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import LiveStream from './src/components/LiveStream';
 
-const {height, width} = Dimensions.get('window');
-const App: () => React$Node = () => {
-  const NodeCamera = useRef(null);
+const modal = Platform.OS;
+const Stack = createStackNavigator();
+const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{flex: 1}}>
-        <NodeCameraView
-          ref={NodeCamera}
-          style={[StyleSheet.absoluteFill, {height}]}
-          outputUrl={
-            'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D'
-          }
-          camera={{cameraId: 1, cameraFrontMirror: true}}
-          audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
-          video={{
-            preset: 2,
-            bitrate: 400000,
-            profile: 1,
-            fps: 30, //[15,20,24,30]
-            videoFrontMirror: false,
-          }}
-          autopreview={true}
-          denoise={true}
-          smoothSkinLevel={5}
-          onStatus={(e) => console.log('onStatueChange', e)}
-        />
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width,
-            justifyContent: 'space-around',
-            flexDirection: 'row',
-          }}>
-          <Button
-            title="start"
-            onPress={() => {
-              NodeCamera?.current.start();
-            }}
+      <StatusBar barStyle="dark-content" translucent />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen
+            name="LiveStream"
+            component={LiveStream}
+            options={{headerShown: false, gestureEnabled: false}}
           />
-          <Button
-            title="stop"
-            onPress={() => {
-              NodeCamera?.current.stop();
-            }}
-          />
-          <Button
-            title="switchCamera"
-            onPress={() => {
-              NodeCamera?.current.switchCamera();
-            }}
-          />
-        </View>
-      </SafeAreaView>
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 };
 export default App;
+
+const Home = () => {
+  const {navigate} = useNavigation();
+  const goLiveStream = useCallback(() => {
+    modal === 'android' && requestPermission();
+    navigate('LiveStream');
+  }, []);
+
+  const requestPermission = useCallback(async () => {
+    try {
+      const granted = await PermissionsAndroid.requestMultiple(
+        [
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        ],
+        {
+          title: 'Cool Photo App Camera And Microphone Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera👌');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn('err', err);
+    }
+  }, []);
+
+  return (
+    <SafeAreaView>
+      <Button title="live stream" onPress={goLiveStream} />
+    </SafeAreaView>
+  );
+};
