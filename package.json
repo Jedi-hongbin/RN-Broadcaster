@@ -10,9 +10,11 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "add": "^2.0.6",
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-bambuser-broadcaster": "^0.0.18"
+    "react-native-nodemediaclient": "^0.2.14",
+    "yarn": "^1.22.10"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
