@@ -4,8 +4,9 @@ import {NodeCameraView} from 'react-native-nodemediaclient';
 import {useNavigation} from '@react-navigation/native';
 
 const outputUrl =
-  'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D';
+  'rtmp://push.hongbin.xyz/xstore/test?auth_key=1610323200-0-0-d20f4fbb9d310a4a272ec27f6b14efad';
 
+// 'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D';
 const LiveStream = () => {
   const NodeCamera = useRef(null);
   const navigation = useNavigation();

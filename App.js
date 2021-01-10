@@ -15,7 +15,11 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" translucent />
+      <StatusBar
+        barStyle="dark-content"
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Home" component={Home} />
