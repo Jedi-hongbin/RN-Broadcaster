@@ -3,8 +3,7 @@ import {View, Button, StyleSheet, Alert} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
 import {useNavigation} from '@react-navigation/native';
 
-const outputUrl =
-  'rtmp://push.hongbin.xyz/xstore/test?auth_key=1610323200-0-0-d20f4fbb9d310a4a272ec27f6b14efad';
+const outputUrl = 'rtmp://push.hongbin.xyz/xstore/test';
 
 // 'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D';
 const LiveStream = () => {
@@ -53,7 +52,7 @@ const LiveStream = () => {
 
   return (
     <View style={{flex: 1}}>
-      <NodeCameraView
+      {/* <NodeCameraView
         ref={NodeCamera}
         style={[StyleSheet.absoluteFill, {height: '100%'}]}
         outputUrl={outputUrl}
@@ -70,7 +69,25 @@ const LiveStream = () => {
         denoise={true}
         smoothSkinLevel={5}
         onStatus={(e) => console.log('statueChange', e)}
+      /> */}
+      <NodeCameraView
+        style={{height: 400}}
+        ref={(vb) => {
+          this.vb = vb;
+        }}
+        outputUrl={outputUrl}
+        camera={{cameraId: 1, cameraFrontMirror: true}}
+        audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
+        video={{
+          preset: 12,
+          bitrate: 400000,
+          profile: 1,
+          fps: 15,
+          videoFrontMirror: false,
+        }}
+        autopreview={true}
       />
+
       <View style={styles.back}>
         <Button title="back" onPress={backScreen} />
       </View>
