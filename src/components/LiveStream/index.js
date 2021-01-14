@@ -3,7 +3,10 @@ import {View, Button, StyleSheet, Alert} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
 import {useNavigation} from '@react-navigation/native';
 
-const outputUrl = 'rtmp://push.hongbin.xyz/xstore/test';
+// const outputUrl = 'rtmp://push.hongbin.xyz/xstore/test';
+const outputUrl =
+  'rtmps://348175d0d0af.global-contribute.live-video.net:443/app/';
+//sk_us-east-1_FD6LF71bcdtW_2RNk4JnjHlQupMcooX1FDDsDDnToCB
 
 // 'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D';
 const LiveStream = () => {
@@ -72,9 +75,7 @@ const LiveStream = () => {
       /> */}
       <NodeCameraView
         style={{height: 400}}
-        ref={(vb) => {
-          this.vb = vb;
-        }}
+        ref={NodeCamera}
         outputUrl={outputUrl}
         camera={{cameraId: 1, cameraFrontMirror: true}}
         audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
