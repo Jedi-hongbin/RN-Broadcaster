@@ -10,6 +10,7 @@ import {
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import LiveStream from './src/components/LiveStream';
+import Clipboard from '@react-native-community/clipboard';
 
 const modal = Platform.OS;
 const Stack = createStackNavigator();
@@ -81,9 +82,19 @@ const Home = () => {
           borderWidth: 2,
           borderColor: '#000',
           borderRadius: 5,
-          width: '100%',
-          minHeight: 40,
+          flex: 1,
+          minHeight: 50,
+          color: '#FFF',
           margin: 10,
+          paddingLeft: 10,
+          backgroundColor: '#CCC',
+        }}
+      />
+      <Button
+        title="live stream"
+        onPress={async () => {
+          const url = await Clipboard.getString();
+          setOutputUrl(url);
         }}
       />
       <Button title="live stream" onPress={goLiveStream} />
