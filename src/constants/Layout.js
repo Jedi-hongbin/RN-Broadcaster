@@ -1,16 +1,7 @@
-import {Platform, NativeModules} from 'react-native';
-const {StatusBarManager} = NativeModules;
+import {Platform, Dimensions} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const modal = Platform.OS;
+const {width: DEVICE_WIDTH, height: DEVICE_HEIGHT} = Dimensions.get('window');
 
-let statusBarHeight = 0;
-
-if (modal === 'android') {
-  statusBarHeight = StatusBarManager.HEIGHT;
-} else {
-  StatusBarManager.getHeight(({height}) => {
-    statusBarHeight = height;
-  });
-}
-export {statusBarHeight, modal, useSafeAreaInsets};
+export {modal, useSafeAreaInsets, DEVICE_WIDTH, DEVICE_HEIGHT};
