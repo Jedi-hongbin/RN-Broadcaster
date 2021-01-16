@@ -10,8 +10,11 @@ import {useNavigation} from '@react-navigation/native';
 
 // 'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D';
 
+// const outputUrl =
+//   'rtmp://125087.livepush.myqcloud.com/live/xstore?txSecret=c9a739469fbc932e863441f0a8430cb4&txTime=60011428';
+
 const outputUrl =
-  'rtmp://125087.livepush.myqcloud.com/live/xstore?txSecret=c9a739469fbc932e863441f0a8430cb4&txTime=60011428';
+  'rtmp://global-live.mux.com:5222/app/98e37d56-8222-4cb0-5665-accbe427d697';
 
 const LiveStream = () => {
   const NodeCamera = useRef(null);
