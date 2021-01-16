@@ -3,10 +3,12 @@ import {View, Button, StyleSheet, Alert, Text} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import nodeCameraConfig from './nodeCameraConfig';
+import {useSafeAreaInsets} from '../../constants/Layout';
 
 const LiveStream = () => {
   const NodeCamera = useRef(null);
   const navigation = useNavigation();
+  const {bottom: SafeAreaBottom, top: SafeAreaTop} = useSafeAreaInsets();
   const {
     params: {outputUrl},
   } = useRoute();
@@ -77,17 +79,17 @@ const LiveStream = () => {
   );
 
   const memoSwitchCameraButton = useMemo(
-    () => <Button title="switchCamera" onPress={switchCamera} />,
+    () => <Button title="Switch Camera" onPress={switchCamera} />,
     [switchCamera],
   );
 
   const memoBackButton = useMemo(
     () => (
-      <View style={styles.back}>
-        <Button title="back" onPress={backScreen} />
+      <View style={[styles.back, {top: SafeAreaTop}]}>
+        <Button title="Back" onPress={backScreen} />
       </View>
     ),
-    [backScreen],
+    [backScreen, SafeAreaTop],
   );
 
   const onStatus = useCallback((e, m) => {
@@ -105,8 +107,8 @@ const LiveStream = () => {
         {...nodeCameraConfig}
       />
       {memoBackButton}
-      <Text style={styles.liveStatus}>{liveStatus}</Text>
-      <View style={styles.bottomView}>
+      <Text style={[styles.liveStatus, {top: SafeAreaTop}]}>{liveStatus}</Text>
+      <View style={[styles.bottomView, {paddingBottom: SafeAreaBottom}]}>
         {memoStarButton}
         {memoStopButton}
         {memoSwitchCameraButton}
@@ -121,25 +123,28 @@ const styles = StyleSheet.create({
   container: {flex: 1},
   back: {
     position: 'absolute',
-    top: 20,
-    left: 0,
+    left: 20,
   },
   bottomView: {
     position: 'absolute',
-    bottom: 0,
     width: '100%',
+    bottom: 0,
     justifyContent: 'space-around',
     flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.1)',
   },
   liveStatus: {
     color: '#FFF',
     fontWeight: 'bold',
     fontSize: 22,
     position: 'absolute',
-    top: 20,
     right: 20,
   },
-  nodeCameraView: {...StyleSheet.absoluteFill, height: '100%'},
+  nodeCameraView: {
+    ...StyleSheet.absoluteFill,
+    height: '100%',
+    backgroundColor: '#000',
+  },
 });
 /* <NodeCameraView
         style={{height: 400}}

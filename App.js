@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StatusBar,
   Button,
-  Platform,
   PermissionsAndroid,
   TextInput,
   StyleSheet,
@@ -13,8 +12,8 @@ import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import LiveStream from './src/components/LiveStream';
 import Clipboard from '@react-native-community/clipboard';
+import {modal} from './src/constants/Layout';
 
-const modal = Platform.OS;
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -84,16 +83,18 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <View style={styles.inputView}>
-        <TextInput
-          onChangeText={setOutputUrl}
-          value={outputUrl}
-          placeholder="input outputUrl"
-          style={styles.textInput}
-        />
-        <Button title="paste" onPress={pasteOutputUrl} />
+      <View style={styles.wrapper}>
+        <View style={styles.inputView}>
+          <TextInput
+            onChangeText={setOutputUrl}
+            value={outputUrl}
+            placeholder="input outputUrl"
+            style={styles.textInput}
+          />
+          <Button title="paste" onPress={pasteOutputUrl} />
+        </View>
+        <Button title="live stream" onPress={goLiveStream} />
       </View>
-      <Button title="live stream" onPress={goLiveStream} />
     </SafeAreaView>
   );
 };
