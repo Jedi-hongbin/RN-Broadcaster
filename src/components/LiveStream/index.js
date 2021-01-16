@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 //   'rtmp://125087.livepush.myqcloud.com/live/xstore?txSecret=c9a739469fbc932e863441f0a8430cb4&txTime=60011428';
 
 const outputUrl =
-  'rtmp://global-live.mux.com:5222/app/72e5aedb-37de-afd6-9517-8efade8c8153';
+  'rtmp://global-live.mux.com:5222/app/2e37bdcd-3979-d596-1195-814eb9238918';
 
 const LiveStream = () => {
   const NodeCamera = useRef(null);
