@@ -1,24 +1,15 @@
 import React, {useRef, useState, useCallback} from 'react';
 import {View, Button, StyleSheet, Alert} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
-import {useNavigation} from '@react-navigation/native';
-
-// const outputUrl = 'rtmp://push.hongbin.xyz/xstore/test';
-// const outputUrl =
-//   'rtmps://348175d0d0af.global-contribute.live-video.net:443/app/';
-//sk_us-east-1_FD6LF71bcdtW_2RNk4JnjHlQupMcooX1FDDsDDnToCB
-
-// 'rtmp://125087.livepush.myqcloud.com/live/nodemedia?txSecret=91b92743eb120a4c6f33468512a08857&txTime=5FFD4A2D';
-
-// const outputUrl =
-//   'rtmp://125087.livepush.myqcloud.com/live/xstore?txSecret=c9a739469fbc932e863441f0a8430cb4&txTime=60011428';
-
-const outputUrl =
-  'rtmp://global-live.mux.com:5222/app/2e37bdcd-3979-d596-1195-814eb9238918';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const LiveStream = () => {
   const NodeCamera = useRef(null);
   const navigation = useNavigation();
+  const {
+    params: {outputUrl},
+  } = useRoute();
+  console.log('outputUrl:', outputUrl);
   const [live, setLive] = useState(false);
 
   const backScreen = useCallback(() => {
@@ -33,7 +24,10 @@ const LiveStream = () => {
         style: 'destructive',
         // If the user confirmed, then we dispatch the action we blocked earlier
         // This will continue the action that had triggered the removal of the screen
-        onPress: () => navigation.goBack(),
+        onPress: () => {
+          navigation.goBack();
+          NodeCamera?.current.stop();
+        },
       },
     ]);
   }, [live, navigation]);

@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
   Button,
   Platform,
   PermissionsAndroid,
+  TextInput,
 } from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -37,10 +38,12 @@ export default App;
 
 const Home = () => {
   const {navigate} = useNavigation();
+  const [outputUrl, setOutputUrl] = useState('');
+
   const goLiveStream = useCallback(() => {
     modal === 'android' && requestPermission();
-    navigate('LiveStream');
-  }, []);
+    navigate('LiveStream', {outputUrl});
+  }, [outputUrl, requestPermission, navigate]);
 
   const requestPermission = useCallback(async () => {
     try {
@@ -71,6 +74,16 @@ const Home = () => {
 
   return (
     <SafeAreaView>
+      <TextInput
+        onChangeText={setOutputUrl}
+        style={{
+          borderWidth: 1,
+          borderColor: '#FFF',
+          borderRadius: 5,
+          width: '100%',
+          minHeight: 40,
+        }}
+      />
       <Button title="live stream" onPress={goLiveStream} />
     </SafeAreaView>
   );
