@@ -6,6 +6,7 @@ import {
   Platform,
   PermissionsAndroid,
   TextInput,
+  StyleSheet,View
 } from 'react-native';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -74,30 +75,44 @@ const Home = () => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <TextInput
-        onChangeText={setOutputUrl}
-        placeholder="input outputUrl"
-        style={{
-          borderWidth: 2,
-          borderColor: '#000',
-          borderRadius: 5,
-          flex: 1,
-          minHeight: 50,
-          color: '#FFF',
-          margin: 10,
-          paddingLeft: 10,
-          backgroundColor: '#CCC',
-        }}
-      />
-      <Button
-        title="live stream"
-        onPress={async () => {
-          const url = await Clipboard.getString();
-          setOutputUrl(url);
-        }}
-      />
+    <SafeAreaView style={{flex:1,padding:10}}>
+      <View style={styles.inputView}>
+        <TextInput
+          onChangeText={setOutputUrl}
+          value={outputUrl}
+          placeholder="input outputUrl"
+          style={{
+            borderWidth: 2,
+            borderColor: '#000',
+            borderRadius: 5,
+            flex: 1,
+            minHeight: 50,
+            color: '#FFF',
+            margin: 5,
+            marginLeft:0,
+            paddingLeft: 10,
+            backgroundColor: '#CCC',
+          }}
+        />
+        <Button
+          title="paste"
+          onPress={async () => {
+            const url = await Clipboard.getString();
+            setOutputUrl(() => url);
+            console.log(url);
+          }}
+        />
+      </View>
+
       <Button title="live stream" onPress={goLiveStream} />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  inputView:{
+    flexDirection:"row",
+    justifyContent:"space-between",
+    alignItems:"center"
+  }
+})
