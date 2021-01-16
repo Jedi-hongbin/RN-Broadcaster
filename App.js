@@ -76,12 +76,14 @@ const Home = () => {
     <SafeAreaView>
       <TextInput
         onChangeText={setOutputUrl}
+        placeholder="input outputUrl"
         style={{
-          borderWidth: 1,
-          borderColor: '#FFF',
+          borderWidth: 2,
+          borderColor: '#000',
           borderRadius: 5,
           width: '100%',
           minHeight: 40,
+          margin: 10,
         }}
       />
       <Button title="live stream" onPress={goLiveStream} />
