@@ -1,5 +1,5 @@
 import React, {useRef, useState, useCallback} from 'react';
-import {View, Button, StyleSheet, Alert} from 'react-native';
+import {View, Button, StyleSheet, Alert, Text} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
@@ -10,10 +10,10 @@ const LiveStream = () => {
     params: {outputUrl},
   } = useRoute();
   console.log('outputUrl:', outputUrl);
-  const [live, setLive] = useState(false);
+  const [stateCode, setStateCode] = useState('');
 
   const backScreen = useCallback(() => {
-    if (!live) {
+    if (stateCode !== 2001) {
       return navigation.goBack();
     }
 
@@ -30,10 +30,9 @@ const LiveStream = () => {
         },
       },
     ]);
-  }, [live, navigation]);
+  }, [stateCode, navigation]);
 
   const startLive = useCallback(() => {
-    setLive(true);
     NodeCamera?.current.start();
   }, [NodeCamera]);
 
@@ -43,7 +42,6 @@ const LiveStream = () => {
       {
         text: 'stop',
         onPress: () => {
-          setLive(false);
           NodeCamera?.current.stop();
         },
       },
@@ -72,7 +70,11 @@ const LiveStream = () => {
         autopreview={true}
         denoise={true}
         smoothSkinLevel={5}
-        onStatus={(e, m) => console.log('statueChange', e, m)}
+        onStatus={(e, m) => {
+          console.log(typeof e);
+          console.log('statueChange', e, m);
+          setStateCode(() => e);
+        }}
       />
       {/* <NodeCameraView
         style={{height: 400}}
@@ -93,9 +95,26 @@ const LiveStream = () => {
       <View style={styles.back}>
         <Button title="back" onPress={backScreen} />
       </View>
+      <Text
+        style={{
+          color: '#FFF',
+          fontWeight: 'bold',
+          fontSize: 22,
+          position: 'absolute',
+          top: 20,
+          right: 20,
+        }}>
+        {stateCode === 2000
+          ? 'Connecting...'
+          : stateCode === 2002
+          ? 'Connect.Failed'
+          : stateCode === 2004 || stateCode === 2005
+          ? 'Connect.Closed'
+          : ''}
+      </Text>
       <View style={styles.bottomView}>
         <Button title="start" onPress={startLive} />
-        <Button title="stop" onPress={stopLive} />
+        {stateCode === 2001 ? <Button title="stop" onPress={stopLive} /> : null}
         <Button title="switchCamera" onPress={switchCamera} />
       </View>
     </View>
