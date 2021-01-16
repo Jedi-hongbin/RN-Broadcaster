@@ -1,7 +1,8 @@
-import React, {useRef, useState, useCallback} from 'react';
+import React, {useRef, useState, useCallback, useMemo} from 'react';
 import {View, Button, StyleSheet, Alert, Text} from 'react-native';
 import {NodeCameraView} from 'react-native-nodemediaclient';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import nodeCameraConfig from './nodeCameraConfig';
 
 const LiveStream = () => {
   const NodeCamera = useRef(null);
@@ -10,10 +11,10 @@ const LiveStream = () => {
     params: {outputUrl},
   } = useRoute();
   console.log('outputUrl:', outputUrl);
-  const [stateCode, setStateCode] = useState('');
+  const [statusCode, setStatusCode] = useState('');
 
   const backScreen = useCallback(() => {
-    if (stateCode !== 2001) {
+    if (statusCode !== 2001) {
       return navigation.goBack();
     }
 
@@ -30,7 +31,7 @@ const LiveStream = () => {
         },
       },
     ]);
-  }, [stateCode, navigation]);
+  }, [statusCode, navigation]);
 
   const startLive = useCallback(() => {
     NodeCamera?.current.start();
@@ -52,70 +53,63 @@ const LiveStream = () => {
     NodeCamera,
   ]);
 
-  return (
-    <View style={{flex: 1}}>
-      <NodeCameraView
-        ref={NodeCamera}
-        style={[StyleSheet.absoluteFill, {height: '100%'}]}
-        outputUrl={outputUrl}
-        camera={{cameraId: 1, cameraFrontMirror: true}}
-        audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
-        video={{
-          preset: 4,
-          bitrate: 400000,
-          profile: 1,
-          fps: 30, //[15,20,24,30]
-          videoFrontMirror: false,
-        }}
-        autopreview={true}
-        denoise={true}
-        smoothSkinLevel={5}
-        onStatus={(e, m) => {
-          console.log(typeof e);
-          console.log('statueChange', e, m);
-          setStateCode(() => e);
-        }}
-      />
-      {/* <NodeCameraView
-        style={{height: 400}}
-        ref={NodeCamera}
-        outputUrl={outputUrl}
-        camera={{cameraId: 1, cameraFrontMirror: true}}
-        audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
-        video={{
-          preset: 12,
-          bitrate: 400000,
-          profile: 1,
-          fps: 15,
-          videoFrontMirror: false,
-        }}
-        autopreview={true}
-      /> */}
+  const liveStatus = useMemo(
+    () =>
+      statusCode === 2000
+        ? 'Connecting...'
+        : statusCode === 2002
+        ? 'Connect.Failed'
+        : statusCode === 2004 || statusCode === 2005
+        ? 'Connect.Closed'
+        : '',
+    [statusCode],
+  );
 
+  const memoStopButton = useMemo(
+    () =>
+      statusCode === 2001 ? <Button title="stop" onPress={stopLive} /> : null,
+    [statusCode, stopLive],
+  );
+
+  const memoStarButton = useMemo(
+    () => <Button title="start" onPress={startLive} />,
+    [startLive],
+  );
+
+  const memoSwitchCameraButton = useMemo(
+    () => <Button title="switchCamera" onPress={switchCamera} />,
+    [switchCamera],
+  );
+
+  const memoBackButton = useMemo(
+    () => (
       <View style={styles.back}>
         <Button title="back" onPress={backScreen} />
       </View>
-      <Text
-        style={{
-          color: '#FFF',
-          fontWeight: 'bold',
-          fontSize: 22,
-          position: 'absolute',
-          top: 20,
-          right: 20,
-        }}>
-        {stateCode === 2000
-          ? 'Connecting...'
-          : stateCode === 2002
-          ? 'Connect.Failed'
-          : stateCode === 2004 || stateCode === 2005
-          ? 'Connect.Closed'
-          : ''}
-      </Text>
+    ),
+    [backScreen],
+  );
+
+  const onStatus = useCallback((e, m) => {
+    console.log('statueChange', e, m);
+    setStatusCode(() => e);
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <NodeCameraView
+        ref={NodeCamera}
+        style={styles.nodeCameraView}
+        outputUrl={outputUrl}
+        onStatus={onStatus}
+        {...nodeCameraConfig}
+      />
+      {memoBackButton}
+      <Text style={styles.liveStatus}>{liveStatus}</Text>
       <View style={styles.bottomView}>
-        <Button title="start" onPress={startLive} />
-        {stateCode === 2001 ? <Button title="stop" onPress={stopLive} /> : null}
-        <Button title="switchCamera" onPress={switchCamera} />
+        {memoStarButton}
+        {memoStopButton}
+        {memoSwitchCameraButton}
       </View>
     </View>
   );
@@ -124,6 +118,7 @@ const LiveStream = () => {
 export default LiveStream;
 
 const styles = StyleSheet.create({
+  container: {flex: 1},
   back: {
     position: 'absolute',
     top: 20,
@@ -136,4 +131,28 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexDirection: 'row',
   },
+  liveStatus: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 22,
+    position: 'absolute',
+    top: 20,
+    right: 20,
+  },
+  nodeCameraView: {...StyleSheet.absoluteFill, height: '100%'},
 });
+/* <NodeCameraView
+        style={{height: 400}}
+        ref={NodeCamera}
+        outputUrl={outputUrl}
+        camera={{cameraId: 1, cameraFrontMirror: true}}
+        audio={{bitrate: 32000, profile: 1, samplerate: 44100}}
+        video={{
+          preset: 12,
+          bitrate: 400000,
+          profile: 1,
+          fps: 15,
+          videoFrontMirror: false,
+        }}
+        autoprefixer={true}
+      /> */
