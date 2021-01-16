@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 //   'rtmp://125087.livepush.myqcloud.com/live/xstore?txSecret=c9a739469fbc932e863441f0a8430cb4&txTime=60011428';
 
 const outputUrl =
-  'rtmp://global-live.mux.com:5222/app/98e37d56-8222-4cb0-5665-accbe427d697';
+  'rtmp://global-live.mux.com:5222/app/72e5aedb-37de-afd6-9517-8efade8c8153';
 
 const LiveStream = () => {
   const NodeCamera = useRef(null);
@@ -78,7 +78,7 @@ const LiveStream = () => {
         autopreview={true}
         denoise={true}
         smoothSkinLevel={5}
-        onStatus={(e) => console.log('statueChange', e)}
+        onStatus={(e, m) => console.log('statueChange', e, m)}
       />
       {/* <NodeCameraView
         style={{height: 400}}
