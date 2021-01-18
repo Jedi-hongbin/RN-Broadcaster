@@ -13,6 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import LiveStream from './src/components/LiveStream';
 import Clipboard from '@react-native-community/clipboard';
 import {modal} from './src/constants/Layout';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -93,6 +94,7 @@ const Home = () => {
           />
           <Button title="paste" onPress={pasteOutputUrl} />
         </View>
+        <MaterialIcons name="home" size={25} color="#faa" />
         <Button title="live stream" onPress={goLiveStream} />
       </View>
     </SafeAreaView>
